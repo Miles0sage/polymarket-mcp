@@ -28,12 +28,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application
 COPY . .
 
-# Persist trade database across container restarts
-VOLUME ["/root/.polymarket-agent"]
-
-# Health check: verify the agent can scan markets
-HEALTHCHECK --interval=300s --timeout=30s --retries=3 \
-    CMD python agent.py scan > /dev/null 2>&1 || exit 1
+# Note: Use Railway Volumes for persistence (VOLUME keyword banned on Railway)
+# https://docs.railway.com/reference/volumes
 
 ENTRYPOINT ["python", "agent.py"]
 CMD ["run"]
