@@ -1,17 +1,18 @@
-# Polymarket MCP -- The Open-Source Prediction Market Agent
+# Polymarket MCP
 
-**Your AI edge in prediction markets.** Search, analyze, detect mispricing, track whales, and trade -- all from your LLM.
+**Your AI edge in prediction markets.** Search, analyze, detect mispricing, track whales, and paper trade -- all from your LLM.
 
-![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-brightgreen.svg)
-![Tools](https://img.shields.io/badge/Tools-15+-orange.svg)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![MCP Compatible](https://img.shields.io/badge/MCP-compatible-brightgreen?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PC9zdmc+)](https://modelcontextprotocol.io)
+[![Tools: 22](https://img.shields.io/badge/tools-22-orange.svg)](#tool-reference)
+[![GitHub stars](https://img.shields.io/github/stars/Miles0sage/polymarket-mcp?style=social)](https://github.com/Miles0sage/polymarket-mcp)
 
 ---
 
 ## What This Is
 
-Most prediction market tools give you a dashboard. This gives you a **brain**. Polymarket MCP connects any LLM (Claude, GPT, Gemini) to Polymarket's data and wraps it with EV calculations, Kelly sizing, arbitrage detection, news-driven edge finding, and crypto correlation analysis -- all as MCP tools your AI can call autonomously.
+Most prediction market tools give you a dashboard. This gives you a **brain**. Polymarket MCP connects any LLM (Claude, GPT, Gemini) to Polymarket's data and wraps it with EV calculations, Kelly sizing, arbitrage detection, whale tracking, paper trading, and crypto correlation analysis -- all as MCP tools your AI can call autonomously.
 
 Not a toy. Not a wrapper. A full agent toolkit for prediction markets.
 
@@ -19,16 +20,15 @@ Not a toy. Not a wrapper. A full agent toolkit for prediction markets.
 
 ## Features
 
-| Category | Capability | Status |
-|----------|-----------|--------|
-| **Market Analysis** | Search, trending, details, sports/crypto filters, market summaries | Live (9 tools) |
-| **Edge Detection** | Auto-scan markets for mispricing via news sentiment analysis | Live (2 tools) |
-| **Risk Management** | EV calculation, Kelly criterion sizing, arbitrage scanning | Live (3 tools) |
-| **Crypto Integration** | Live prices (CoinGecko), Fear/Greed index, crypto vs predictions | Live (4 tools) |
-| **Paper Trading** | Risk-free practice with virtual bankroll, track P&L | Planned |
-| **Whale Tracking** | Follow top traders (Theo4, Fredi9999, etc.), copy signals | Planned |
-| **Alert System** | Telegram/Discord notifications on edge detection triggers | Planned |
-| **Live Trading** | Execute trades via Polymarket CLOB API | Planned |
+| Category | Tools | What You Get |
+|----------|:-----:|--------------|
+| **Market Data** | 5 | Search, trending, details, sports & crypto market filters |
+| **Risk & Sizing** | 3 | Expected value calc, Kelly criterion, arbitrage scanning |
+| **Research & Edge** | 3 | News sentiment analysis, batch edge finder, auto edge scanner |
+| **Paper Trading** | 5 | Risk-free practice, portfolio tracking, settlement, trade history, orderbook |
+| **Crypto** | 4 | Live prices (CoinGecko), Fear & Greed index, crypto vs prediction cross-analysis |
+| **Whale Tracking** | 1 | Monitor top Polymarket wallets and large position changes |
+| **Autonomous Agent** | -- | Standalone agent mode: scans 11K+ markets, paper trades with risk controls |
 
 ---
 
@@ -44,64 +44,17 @@ Add to your MCP config (`~/.mcp.json` or client settings):
 
 ```json
 {
-  "polymarket": {
-    "command": "python3",
-    "args": ["server.py"],
-    "cwd": "/path/to/polymarket-mcp"
+  "mcpServers": {
+    "polymarket": {
+      "command": "python3",
+      "args": ["server.py"],
+      "cwd": "/path/to/polymarket-mcp"
+    }
   }
 }
 ```
 
-No API keys required for market data. Works immediately with Claude Code, Cursor, Windsurf, or any MCP-compatible client.
-
----
-
-## Architecture
-
-```
-                         +------------------+
-                         |   LLM / Client   |
-                         | (Claude, GPT...) |
-                         +--------+---------+
-                                  |
-                            MCP Protocol
-                                  |
-                         +--------v---------+
-                         |   MCP Server     |
-                         |   (server.py)    |
-                         +--------+---------+
-                                  |
-              +-------------------+-------------------+
-              |                   |                   |
-     +--------v------+  +--------v------+  +---------v-----+
-     | Market Data   |  |  Analysis     |  |  Research      |
-     | (tools_       |  |  (tools_      |  |  (tools_       |
-     |  markets.py)  |  |   analysis.py)|  |   research.py) |
-     +-------+-------+  +-------+-------+  +--------+------+
-              |                  |                    |
-     +--------v------+  +-------v-------+  +---------v-----+
-     | Gamma API     |  | EV / Kelly /  |  | Google News   |
-     | CLOB API      |  | Arbitrage     |  | YouTube       |
-     +---------------+  +---------------+  | Sentiment     |
-                                           +---------------+
-              +-------------------+
-              |   Crypto Data     |
-              |  (tools_crypto.py)|
-              +--------+----------+
-                       |
-              +--------v----------+
-              | CoinGecko API     |
-              | Fear/Greed Index  |
-              +---------+---------+
-                        |
-                  (Future)
-                        |
-     +------------------v------------------+
-     |  Paper Trading  |  Whale Tracker    |
-     |  Risk Manager   |  Alert System     |
-     |  CLOB Trading   |  Dashboard UI     |
-     +------------------+------------------+
-```
+No API keys required for market data. Works immediately with Claude Code, Cursor, Windsurf, or any MCP client.
 
 ---
 
@@ -117,7 +70,7 @@ No API keys required for market data. Works immediately with Claude Code, Cursor
 | `crypto_prediction_markets` | Active crypto-related markets (BTC, ETH, SOL, DeFi) |
 | `sports_prediction_markets` | Active sports markets (NBA, NFL, UFC, F1, NCAA) |
 
-### Analysis (3 tools)
+### Risk & Sizing (3 tools)
 
 | Tool | Description |
 |------|-------------|
@@ -131,7 +84,23 @@ No API keys required for market data. Works immediately with Claude Code, Cursor
 |------|-------------|
 | `research_market` | News + YouTube + sentiment analysis for any market question |
 | `edge_finder` | Batch scan markets for mispricing via news sentiment vs market price |
-| `market_summary` | Human-readable summary with implied probability and market read |
+| `scan_edges` | Auto-scan trending markets for edges above your threshold |
+
+### Paper Trading (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `paper_trade` | Place a simulated trade with virtual bankroll |
+| `paper_portfolio` | View open positions and P&L |
+| `paper_settle` | Settle a trade when the market resolves |
+| `paper_history` | Full trade history with results |
+| `get_orderbook` | Live orderbook depth for a market token |
+
+### Whale Tracking (1 tool)
+
+| Tool | Description |
+|------|-------------|
+| `whale_activity` | Monitor top Polymarket traders and large position changes |
 
 ### Crypto (4 tools)
 
@@ -156,11 +125,14 @@ No API keys required for market data. Works immediately with Claude Code, Cursor
 "Check for arbitrage: 0.45, 0.43, 0.08"
   -> ARBITRAGE FOUND! Buy all for $0.96, collect $1.00
 
-"Research: Will Bitcoin hit $200K by end of 2026?"
-  -> News headlines, YouTube analysis, sentiment score
+"Paper trade $50 YES on 'Will BTC hit 200K?'"
+  -> Trade placed, virtual bankroll updated, tracking P&L
 
-"Compare BTC spot price with Polymarket prediction markets"
-  -> Current price + all related markets side by side
+"Scan for edges with min 5% mispricing"
+  -> 3 markets found with news sentiment diverging from price
+
+"Show whale activity"
+  -> Top traders, recent large positions, copy signals
 
 "What's the Fear & Greed Index saying?"
   -> 7-day chart, current reading, trading signal
@@ -168,31 +140,87 @@ No API keys required for market data. Works immediately with Claude Code, Cursor
 
 ---
 
-## Roadmap
+## Architecture
 
-- [ ] **Paper Trading** -- Virtual bankroll, position tracking, P&L history
-- [ ] **Whale Tracker** -- Monitor top Polymarket wallets, alert on large positions
-- [ ] **Live Trading** -- Execute via Polymarket CLOB API (requires wallet + API key)
-- [ ] **WebSocket Feeds** -- Real-time price updates instead of polling
-- [ ] **Alert System** -- Telegram/Discord notifications on edge triggers
-- [ ] **Dashboard UI** -- Web UI for portfolio, positions, edge scanner
-- [ ] **Discord Bot** -- Query markets and get alerts in Discord
-- [ ] **One-Click Deploy** -- Railway/Render template for hosted instance
+```
+                         +------------------+
+                         |   LLM / Client   |
+                         | (Claude, GPT...) |
+                         +--------+---------+
+                                  |
+                            MCP Protocol
+                                  |
+                         +--------v---------+
+                         |   MCP Server     |
+                         |   (server.py)    |
+                         +--------+---------+
+                                  |
+         +------------+----------+----------+------------+
+         |            |          |          |            |
+    +----v----+ +-----v----+ +--v------+ +-v--------+ +-v--------+
+    | Markets | | Analysis | | Research| | Trading  | | Crypto   |
+    +---------+ +----------+ +---------+ +----------+ +----------+
+         |            |          |          |            |
+    Gamma API    EV/Kelly    Google     Paper P&L    CoinGecko
+    CLOB API    Arbitrage    News       Orderbook    Fear/Greed
+                            YouTube     Whales
+```
+
+---
+
+## Standalone Agent
+
+Beyond the MCP tools, `agent.py` runs as a fully autonomous trading agent:
+
+- Scans 11,000+ active markets for mispricing
+- Places paper trades with risk controls (position limits, bankroll management)
+- Sends alerts via Telegram on high-edge opportunities
+- Runs on a cron or as a long-lived process
+
+```bash
+python3 agent.py
+```
+
+Web dashboard (Bloomberg-style UI):
+
+```bash
+python3 dashboard.py  # port 8501
+```
 
 ---
 
 ## Comparison
 
 | Feature | Polymarket MCP | Polystrat | Kalshi News Bot | Manual Trading |
-|---------|---------------|-----------|-----------------|----------------|
+|---------|:-:|:-:|:-:|:-:|
 | LLM integration | Native MCP | None | API only | None |
-| Edge detection | Auto (news sentiment) | Manual | None | Manual |
+| Edge detection | Auto (news) | Manual | None | Manual |
 | Kelly sizing | Built-in | None | None | Spreadsheet |
 | Arbitrage scan | Built-in | None | None | Manual |
-| Crypto correlation | Live CoinGecko | None | N/A | Manual |
+| Paper trading | Built-in | None | None | N/A |
+| Whale tracking | Built-in | None | None | Manual |
+| Crypto correlation | Live | None | N/A | Manual |
 | Open source | MIT | Closed | Closed | N/A |
-| Setup time | 2 minutes | Account required | API key + setup | N/A |
-| Cost | Free | Subscription | Subscription | Free |
+| Setup time | 2 min | Account | API key | N/A |
+| Cost | **Free** | Subscription | Subscription | Free |
+
+---
+
+## Roadmap
+
+- [x] Market search, trending, details
+- [x] EV calculation + Kelly sizing
+- [x] Arbitrage detection
+- [x] News sentiment edge finding
+- [x] Crypto prices + Fear & Greed
+- [x] Paper trading + portfolio tracking
+- [x] Whale activity tracking
+- [x] Orderbook data
+- [x] Autonomous agent + dashboard
+- [ ] Live trading via Polymarket CLOB API
+- [ ] WebSocket real-time price feeds
+- [ ] Telegram/Discord alert system
+- [ ] One-click Railway/Render deploy
 
 ---
 
@@ -205,7 +233,11 @@ server.py             # MCP server, tool registration
 tools_markets.py      # Market data (Gamma API, CLOB API)
 tools_analysis.py     # EV, Kelly, arbitrage math
 tools_research.py     # News sentiment, edge finding
+tools_trading.py      # Paper trading, whale tracking, orderbook
 tools_crypto.py       # CoinGecko prices, Fear/Greed
+tools_alerts.py       # Alert system
+agent.py              # Autonomous trading agent
+dashboard.py          # Web dashboard (Streamlit)
 ```
 
 ---
